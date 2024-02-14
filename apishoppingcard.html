@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping</title>
+    <style>
+        .api_image{
+            width: 70px;
+        }
+        .card{
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .card_body{
+            width: 60%;
+            display: flex;           
+            box-shadow: 1px 1px 10px rgb(183, 178, 178);
+        }
+
+        .card_body img{
+            width: 200px;
+        }
+        .info{
+            padding-left: 50px;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="card" id="card">
+     
+    </div>
+    <h1>My Shopping</h1>
+    <div class="container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Rating</th>
+            <th>Image</th>
+          </tr>
+        </thead>
+        <tbody id="page">
+         
+        </tbody>
+      </table>
+    </div>
+  </body>
+  <script>
+    let box = document.getElementById("card");
+    let page = document.getElementById("page");
+    let list = "";//empty string
+
+    box.style.display ="none";
+    fetch("https://fakestoreapi.com/products") //data toung
+      .then((res) => res.json())
+      .then((result) => {
+        // console.log(result);
+        for (let i = 0; i < result.length; i++) {
+          list += ` <tr onclick="detail(${result[i].id})">
+                <td>${result[i].id}</td>
+                <td>${result[i].title}</td>
+                <td>${result[i].price}$</td>
+                <td>${result[i].rating.rate}</td>          
+                <td> <a href="${result[i].image}" target="_blink"><img src="${result[i].image}" class="api_image" ></a></td>                
+                </tr>`;
+        }
+        page.innerHTML = list;
+      });
+
+      function detail(id){
+          fetch("https://fakestoreapi.com/products/"+ id)
+        .then((response) => response.json())
+        .then((data) => {
+      card.innerHTML = `  <div class="card_body">
+        <img src="${data.image}" >
+        <div class="info">
+            <h3>${data.title}</h3>
+            <h4>${data.price}</h4>
+            <h4>${data.rating.rate}</h4>
+        </div>
+       </div>`
+       card.style.display = "block";
+        });
+
+      }
+
+    // fetch('https://fakestoreapi.com/products')
+    //     .then((response) => response.json())
+    //     .then((result) => {
+    //         console.log(result);
+    //     });
+
+    // let callApi = async() =>{
+    //     let response = await fetch("https://fakestoreapi.com/products");
+    //     let jsonResponse = await response.json();
+    //     console.log(jsonResponse);
+    // };
+    // callApi();
+  </script>
+</html>
